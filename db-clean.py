@@ -30,7 +30,6 @@ def main():
     # get the current date to determine how old is too old
     date = datetime.datetime.utcnow()
     oldDate = date - datetime.timedelta(days=olderThan)
-    print("Today's date:", date, "\n", olderThan, "days ago:", oldDate)
 
     # now delete all records older than that date.
     # do this to hosts and hostvuln.

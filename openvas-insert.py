@@ -40,7 +40,7 @@ def main():
             result = {}
 
             # this won't go in the result document, but will be used
-            #to find the result document we're inserting into or creating
+            # to find the result document we're inserting into or creating
             ipaddr = elem.find("host").text
             (port, proto) = elem.find("port").text.split('/')
             result['port'] = port
@@ -89,8 +89,8 @@ def main():
             # this host. In this case we will update the existing record
             # (to add a new timestamp) if a mapping already exists
 
-            if db.hostvuln.count({'ipaddr': ipaddr, 'oid': oid}) == 0:
-                db.hostvuln.insert({'ipaddr': ipaddr,
+            if db.hostvuln.count({'ip': ipaddr, 'oid': oid}) == 0:
+                db.hostvuln.insert({'ip': ipaddr,
                                             'oid': oid,
                                             'cve': cve,
                                             'updated': datetime.datetime.utcnow()})
@@ -98,6 +98,19 @@ def main():
                 db.hostvuln.update_one({'ip': ipaddr,
                                         'oid': oid},
                                         {'$set': {'updated': datetime.datetime.utcnow()}})
+
+            # finally, we need to update our hosts entry for this IP
+            # address since it obviously still exists. If it doesn't already
+            # exist in our database, that is a shortcoming of our scanning
+            # methodology so we need to create a bare-bones record with the
+            # information we've collected here.
+
+            if db.hosts.count({'ip': ipaddr}) == 0:
+                db.hosts.insert({'ip': ipaddr,
+                                    'updated': datetime.datetime.utcnow()})
+            else:
+                db.hosts.update_one({'ip': ipaddr},
+                                    {'$set': {'updated': datetime.datetime.utcnow()}})
 
     infile.close() # we're done
 
