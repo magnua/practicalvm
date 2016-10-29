@@ -87,7 +87,6 @@ def main():
                     "os": os,
                     "updated": datetime.datetime.utcnow()
                     }
-            print(host)
 
             # check if this host exists already
             # update if so, insert if not.
