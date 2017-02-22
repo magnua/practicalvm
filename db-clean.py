@@ -6,7 +6,6 @@
 # v0.1
 # Andrew Magnusson
 
-from xml.etree.cElementTree import iterparse
 from pymongo import MongoClient
 import datetime, sys
 

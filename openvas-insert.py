@@ -7,7 +7,7 @@
 # already exists in Mongo, data provided here will
 # be ignored.
 #
-# v0.1
+# v0.2
 # Andrew Magnusson
 
 from xml.etree.cElementTree import iterparse
@@ -32,10 +32,28 @@ def main():
 
 # find and open the output XML file
     infile = open(sys.argv[1], 'r')
-    #xmlfile = infile.read()
 
-# Do this for each 'result' block in the output file
+    # Start parsing the XML tree.
     for event, elem in iterparse(infile):
+
+        # First we need to get rid of 'stale' vulnerablity-host mappings.
+        # In this case, our logic is: any host that was found in this scan,
+        # delete its stale data, because we'll be replacing it.
+
+        # So first let's get a list of hosts found in the scan. It seems the
+        # best way of doing this is via the 'ports' section in the report,
+        # unintuitively enough.
+
+        if elem.tag == "ports":
+            hostlist = [host.text for host in elem.iter('host')]
+            hostlist = set(hostlist) # to get unique hosts
+
+            # Delete hostvuln mappings for these hosts.
+            for host in hostlist:
+                db.hostvuln.remove({'ip': host})
+
+
+        # Now do this for each 'result' block in the output file
         if elem.tag == "result":
             result = {}
 
