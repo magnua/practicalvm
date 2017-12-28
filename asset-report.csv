@@ -1,0 +1,9 @@
+IP Address,Hostname,OS,Open TCP Ports,Open UDP Ports,Detected Services,Vulnerabilities Found,List of CVEs
+10.0.1.1,,NetBSD 5.0 - 5.99.5,53; 5009; 10000; ,,domain; snet-sensor-mgmt; airport-admin; ,1,NOCVE; 
+10.0.1.18,,Linux 3.2 - 4.0,22; 80; 111; 139; 445; 3000; 3001; 3005; 3006; 5000; 49152; ,,http; ppp; ssh; microsoft-ds; rpcbind; deslogin; upnp; netbios-ssn; nessus; unknown; deslogind; ,1,NOCVE; 
+10.0.1.19,,Apple Mac OS X 10.7.0 (Lion) - 10.10 (Yosemite) or iOS 4.1 - 8.3 (Darwin 10.0.0 - 14.5.0),88; 445; 548; 3689; 5900; ,,kerberos-sec; rendezvous; vnc; microsoft-ds; afp; ,0,
+10.0.1.21,,Linux 3.12 - 3.19,22; 80; 443; ,,http; ssh; https; ,3,NOCVE; NOCVE; NOCVE; 
+10.0.1.3,,"Canon imageCLASS MF4500-, MF4700-, or MF4800-series printer",80; 515; 9100; ,,http; jetdirect; printer; ,0,
+10.0.1.4,,Apple Mac OS X 10.10.2 (Darwin 14.1.0),22; 88; 5900; ,,ssh; vnc; kerberos-sec; ,0,
+10.0.1.8,,Unknown,,,,0,
+10.0.1.9,,Unknown,,,,0,

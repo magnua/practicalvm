@@ -15,10 +15,10 @@ client = MongoClient('mongodb://localhost:27017')
 db = client['vulnmgt']
 
 # Output filename
-outputFile = asset-report.csv
+outputFile = "asset-report.csv"
 
 # CSV column header
-header = ['IP Address', 'Hostname', 'OS', 'Open TCP Ports', 'Open UDP Ports', 'Detected Services', 'Vulnerabilities Found', 'List of Vulnerabilities']
+header = ['IP Address', 'Hostname', 'OS', 'Open TCP Ports', 'Open UDP Ports', 'Detected Services', 'Vulnerabilities Found', 'List of CVEs']
 
 # print usage and exit
 def usage():
@@ -39,36 +39,46 @@ def main():
     # for each asset...
         for ip in iplist:
     # grab relevant asset information
-            details = db.hosts.find({'ip':ip})
+            details = db.hosts.find_one({'ip':ip})
     # construct open ports and services fields
             openTCPPorts = ""
             openUDPPorts = ""
             detectedServices = ""
             serviceList = []
-            for portService in details.ports:
-                if portService.proto == "TCP":
-                    openTCPPorts += portService.port + "; "
-                elif portService.proto == "UDP":
-                    openUDPPorts += portService.port + "; "
-                serviceList.push(portService.service)
+            for portService in details['ports']:
+                if portService['proto'] == "tcp":
+                    openTCPPorts += portService['port'] + "; "
+                elif portService['proto'] == "udp":
+                    openUDPPorts += portService['port'] + "; "
+                serviceList.append(portService['service'])
 
             # deduplicate service names and write to a string
             serviceList = set(serviceList)
             for service in serviceList:
                 detectedServices += service + "; "
 
-    # get list of vulnerability IDs (by CVE)
-            cves = db.hostvuln.find({'ip':ip})
+    # make string of vulns found, resolving them into CVE IDs (if they exist, otherwise NOCVE)
+            cveList = ""
+            if 'oids' in details.keys():
+                vulnCount = len(details['oids'])
+                for oidItem in details['oids']:
+                    cveList += db.vulnerabilities.find_one({'oid': oidItem['oid']}, {'cve':1})['cve'] + "; "
+            else:
+                vulnCount = 0
 
-    # count CVEs
-            cveCount = cves.length()
+
+    # in case there is no OS field
+            if details['os'] != []:
+                os = details['os'][0]['osname']
+            else:
+                os = "Unknown"
 
     # assemble record into a line of CSV
-            record = [ details.ip, details.hostname, details.os.osname, openTCPPorts, openUDPPorts, detectedServices, cveCount, cves]
+            record = [ details['ip'], details['hostname'], os, openTCPPorts, openUDPPorts, detectedServices, vulnCount, cveList]
     # print assembled CSV line to output file
             linewriter.writerow(record)
 
     # close CSV
-    close(outputFile)
+    csvfile.close()
 
 main()

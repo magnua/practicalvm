@@ -31,13 +31,10 @@ def main():
     oldDate = date - datetime.timedelta(days=olderThan)
 
     # now delete all records older than that date.
-    # do this to hosts and hostvuln.
 
     hostsremoved = db.hosts.find({'updated': {'$lt': oldDate}}).count()
-    vulnremoved = db.hostvuln.find({'updated': {'$lt': oldDate}}).count()
     #db.hosts.remove({'updated': {'$lt': oldDate}})
-    #db.hostvuln.remove({'updated': {'$lt': oldDate}})
 
-    print("Stale hosts removed:", hostsremoved, "\nStale host-vuln mappings removed:", vulnremoved)
+    print("Stale hosts removed:", hostsremoved)
 
 main()

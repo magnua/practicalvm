@@ -7,7 +7,7 @@
 # already exists in Mongo, data provided here will
 # be ignored.
 #
-# v0.2
+# v0.3
 # Andrew Magnusson
 
 from xml.etree.cElementTree import iterparse
@@ -18,6 +18,9 @@ import datetime, sys
 # Mongo connection parameters
 client = MongoClient('mongodb://localhost:27017')
 db = client['vulnmgt']
+
+# host - OIDs map
+oidList = {}
 
 # print usage and exit
 def usage():
@@ -44,13 +47,13 @@ def main():
         # best way of doing this is via the 'ports' section in the report,
         # unintuitively enough.
 
-        if elem.tag == "ports":
-            hostlist = [host.text for host in elem.iter('host')]
-            hostlist = set(hostlist) # to get unique hosts
+        #if elem.tag == "ports":
+        #    hostlist = [host.text for host in elem.iter('host')]
+        #    hostlist = set(hostlist) # to get unique hosts
 
             # Delete hostvuln mappings for these hosts.
-            for host in hostlist:
-                db.hostvuln.remove({'ip': host})
+        #    for host in hostlist:
+        #        db.hostvuln.remove({'ip': host})
 
 
         # Now do this for each 'result' block in the output file
@@ -103,32 +106,32 @@ def main():
             if db.vulnerabilities.count({'oid': oid}) == 0:
                 db.vulnerabilities.insert(result)
 
-            # now we need to see if this vulnerability exists yet for
-            # this host. In this case we will update the existing record
-            # (to add a new timestamp) if a mapping already exists
+            # Here we're adding the OID to the dictionary of host-oid lists
+            # specified above. At the end of this main loop we'll go through
+            # each key (aka each IP) and add its list of OIDs to the Mongo
+            # document.
 
-            if db.hostvuln.count({'ip': ipaddr, 'oid': oid}) == 0:
-                db.hostvuln.insert({'ip': ipaddr,
-                                            'oid': oid,
-                                            'cve': cve,
-                                            'updated': datetime.datetime.utcnow()})
+            # Initialize the dictionary key if it's not yet there
+            if ipaddr not in oidList.keys():
+                oidList[ipaddr] = []
+            oidList[ipaddr].append({'proto': proto, 'port': port, 'oid': oid})
+
+
+        # Now, we'll add the OID information to each host. This will provide
+        # the link between hosts and vulnerabilities. If the host doesn't
+        # exist in our database, that is a shortcoming of our scanning
+        # methodology so we need to create a bare-bones record with the
+        # information we've collected here.
+
+        for ipaddress in oidList.keys():
+            if db.hosts.count({'ip': ipaddress}) == 0:
+                db.hosts.insert({'ip': ipaddress,
+                                    'updated': datetime.datetime.utcnow(),
+                                    'oids': oidList[ipaddress]})
             else:
-                db.hostvuln.update_one({'ip': ipaddr,
-                                        'oid': oid},
-                                        {'$set': {'updated': datetime.datetime.utcnow()}})
-
-            # finally, we need to update our hosts entry for this IP
-            # address since it obviously still exists. If it doesn't already
-            # exist in our database, that is a shortcoming of our scanning
-            # methodology so we need to create a bare-bones record with the
-            # information we've collected here.
-
-            if db.hosts.count({'ip': ipaddr}) == 0:
-                db.hosts.insert({'ip': ipaddr,
-                                    'updated': datetime.datetime.utcnow()})
-            else:
-                db.hosts.update_one({'ip': ipaddr},
-                                    {'$set': {'updated': datetime.datetime.utcnow()}})
+                db.hosts.update_one({'ip': ipaddress},
+                                    {'$set': {  'updated': datetime.datetime.utcnow(),
+                                        'oids': oidList[ipaddress]}})
 
     infile.close() # we're done
 
