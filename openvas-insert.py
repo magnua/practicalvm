@@ -80,11 +80,10 @@ def main():
                 continue
             result['cvss'] = cvss
 
-            # this will also be reused
-            cve = nvtblock.find("cve").text
-            result['cve'] = cve
-            result['bid'] = nvtblock.find("bid").text
-            result['xref'] = nvtblock.find("xref").text
+            # these fields might contain one or more comma-separated values.
+            result['cve'] = nvtblock.find("cve").text.split(", ")
+            result['bid'] = nvtblock.find("bid").text.split(", ")
+            result['xref'] = nvtblock.find("xref").text.split(", ")
 
             # the issue is we don't know quite what will be in here for
             # any given vulnerability. So we'll just put them all in the
@@ -93,7 +92,7 @@ def main():
             for item in tags:
                 (tagname, tagvalue) = item.split("=", 1)
                 result[tagname] = tagvalue
-            result['description'] = elem.find("description").text
+            # result['description'] = elem.find("description").text
             result['threat'] = elem.find("threat").text
             result['updated'] = datetime.datetime.utcnow()
             elem.clear()
