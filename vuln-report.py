@@ -42,24 +42,25 @@ def main():
     # for each asset...
         for host in hostList:
     # make string of vulns found, resolving them into CVE IDs (if they exist, otherwise NOCVE)
-
             ip = host['ip']
 
             for oidItem in host['oids']:
-                cve = db.vulnerabilities.find_one({'oid': oidItem['oid']})['cve']
+                cveList = db.vulnerabilities.find_one({'oid': oidItem['oid']})['cve']
+    # because this is a list of one or more items:
+                for cve in cveList:
 
     # skip the NOCVE type, since it's not really useful to us
-                if cve == "NOCVE":
-                    continue
+                    if cve == "NOCVE":
+                        continue
 
     # if there are already IPs mapped to this vulnerability
-                if cve in hostCveMap.keys():
+                    if cve in hostCveMap.keys():
     # ignore duplicates
-                    if ip not in hostCveMap[cve]:
-                        hostCveMap[cve].append(ip)
+                        if ip not in hostCveMap[cve]:
+                            hostCveMap[cve].append(ip)
     # if there aren't any IPs yet, create a new list with this as the first item
-                else:
-                    hostCveMap[cve] = [ ip ]
+                    else:
+                        hostCveMap[cve] = [ ip ]
 
     # now, for each CVE that we've found...
         for cve in hostCveMap.keys():

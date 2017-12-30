@@ -62,7 +62,9 @@ def main():
             if 'oids' in details.keys():
                 vulnCount = len(details['oids'])
                 for oidItem in details['oids']:
-                    cveList += db.vulnerabilities.find_one({'oid': oidItem['oid']}, {'cve':1})['cve'] + "; "
+                    oidCves = db.vulnerabilities.find_one({'oid': oidItem['oid']})['cve']
+                    for cve in oidCves:
+                        cveList += cve + "; "
             else:
                 vulnCount = 0
 
@@ -74,7 +76,7 @@ def main():
                 os = "Unknown"
 
     # assemble record into a line of CSV
-            record = [ details['ip'], details['hostname'], os, openTCPPorts, openUDPPorts, detectedServices, vulnCount, cveList]
+            record = [ details['ip'], details['hostnames'], os, openTCPPorts, openUDPPorts, detectedServices, vulnCount, cveList]
     # print assembled CSV line to output file
             linewriter.writerow(record)
 

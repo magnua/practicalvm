@@ -33,7 +33,7 @@ def main():
     # now delete all records older than that date.
 
     hostsremoved = db.hosts.find({'updated': {'$lt': oldDate}}).count()
-    #db.hosts.remove({'updated': {'$lt': oldDate}})
+    db.hosts.remove({'updated': {'$lt': oldDate}})
 
     print("Stale hosts removed:", hostsremoved)
 
