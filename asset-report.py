@@ -75,8 +75,14 @@ def main():
             else:
                 os = "Unknown"
 
+    # The 'hostname' field is a list of 0 or more hostnames. Choose the first one, of
+    # if there is nothing, an empty string.
+            if details['hostnames'] != []:
+                hostname = details['hostnames'][0]
+            else:
+                hostname = ""
     # assemble record into a line of CSV
-            record = [ details['ip'], details['hostnames'], os, openTCPPorts, openUDPPorts, detectedServices, vulnCount, cveList]
+            record = [ details['ip'], hostname, os, openTCPPorts, openUDPPorts, detectedServices, vulnCount, cveList]
     # print assembled CSV line to output file
             linewriter.writerow(record)
 
