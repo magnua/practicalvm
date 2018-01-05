@@ -36,7 +36,7 @@ def main():
     for event, elem in iterparse(infile):
         if elem.tag == "host":
             # add some defaults in case these come up empty
-            macaddr = {}
+            macaddr = {'addr': "", 'vendor': "Unknown"}
             hostnames = []
             os = []
 

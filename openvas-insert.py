@@ -125,6 +125,10 @@ def main():
         for ipaddress in oidList.keys():
             if db.hosts.count({'ip': ipaddress}) == 0:
                 db.hosts.insert({'ip': ipaddress,
+                                    'mac': { 'addr': "", 'vendor': "Unknown" },
+                                    'ports': [],
+                                    'hostnames': [],
+                                    'os': [],
                                     'updated': datetime.datetime.utcnow(),
                                     'oids': oidList[ipaddress]})
             else:
