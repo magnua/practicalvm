@@ -9,7 +9,7 @@
 from pymongo import MongoClient
 from operator import itemgetter
 import datetime, sys, ipaddress
-from yattag import Doc
+from yattag import Doc, indent
 
 # globals
 # Mongo connection parameters
@@ -35,7 +35,6 @@ def main():
     else:
         network = '0.0.0.0/0'
     networkObj = ipaddress.ip_network(network)
-    print(networkObj)
 
     # create HTML document object (will write to file at the end of the script)
     doc, tag, text, line = Doc().ttl()
@@ -67,13 +66,23 @@ def main():
     # highest confidence.
                 osList = details['os']
                 if osList != []:
+    # this modified sort uses the 'accuracy' item within the object as the sort key.
                     osList.sort(key=itemgetter('accuracy'))
                     os = osList[0]['osname']
                     cpe = osList[0]['cpe'][0]
                 else:
                     os = "Unknown"
                     cpe = "None"
+    # Generate a string of all known hostnames, if any
+                hostnameString = ""
+                if details['hostnames'] != []:
+                    for name in details['hostnames']:
+                        hostnameString += name + ', '
+
                 line('h2', ip)
+                line('b', 'Hostname(s): ')
+                text(hostnameString)
+                doc.stag('br')
                 line('b', 'Detected OS: ')
                 text(os + " (" + str(cpe) + ")")
                 doc.stag('br')
@@ -117,39 +126,53 @@ def main():
 
 
     # make list of vulns found, and we'll go through them
-    # one by one, collecting and formatting useful information
-                cveList = []
+    # one by one, collecting and formatting useful information.
+    # Unfortunately, the fields in 'tags' in the original vulnerability
+    # report from OpenVAS are all optional, so we'll need to test that
+    # our desired fields exist before pulling them out.
                 if 'oids' in details:
+                    line('h3', 'Known Vulnerabilities')
                     for oidItem in details['oids']:
                         oidObj = db.vulnerabilities.find_one({'oid': oidItem['oid']})
-                        line('h3', oidObj['name'])
+                        line('h4', oidObj['name'])
+                        with tag('p'):
+                            text('OID: ')
+                            line('i', oidObj['oid'])
                         with tag('table'):
                             with tag('tr'):
                                 line('td', 'Summary')
-                                line('td', oidObj['summary'])
+                                if 'summary' in oidObj:
+                                    line('td', oidObj['summary'])
+                                else:
+                                    line('td', "")
                             with tag('tr'):
                                 line('td', 'Impact')
-                                line('td', oidObj['impact'])
+                                if 'impact' in oidObj:
+                                    line('td', oidObj['impact'])
+                                else:
+                                    line('td', "")
+                            with tag('tr'):
+                                line('td', 'CVSS')
+                                line('td', oidObj['cvss'])
+                            with tag('tr'):
+                                line('td', 'CVSS Base Vector')
+                                line('td', oidObj['cvss_base_vector'])
 
+    # for each associated CVE, print it out with basic information pulled
+    # from cvedb
                     oidCves = db.vulnerabilities.find_one({'oid': oidItem['oid']})['cve']
-                    for cve in oidCves:
-                        cveList.append(cve)
+                    if oidCves != ['NOCVE']:
+                        line('h5', 'Associated CVE(s):')
+                        with tag('ul'):
+                            for cve in oidCves:
+                                line('li', cve)
                 doc.stag('hr')
-            print(doc.getvalue())
-'''
-    # The 'hostname' field is a list of 0 or more hostnames. Choose the first one, of
-    # if there is nothing, an empty string.
-            if details['hostnames'] != []:
-                hostname = details['hostnames'][0]
-            else:
-                hostname = ""
-    # assemble record into a line of CSV
-            record = [ details['ip'], hostname, os, openTCPPorts, openUDPPorts, detectedServices, vulnCount, cveList]
-    # print assembled CSV line to output file
-            linewriter.writerow(record)
 
-    # close CSV
-    csvfile.close()
-'''
+    # loop is over, time to write the output file.
+    # the 'indent' function will make the source more readable.
+
+            with open(outputFile, 'w') as htmlOut:
+                htmlOut.write(indent(doc.getvalue()))
+                htmlOut.close()
 
 main()
