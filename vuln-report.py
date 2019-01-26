@@ -67,7 +67,6 @@ def main():
 
     # look up CVE details in cve-search database
             cvedetails = cvedb.cves.find_one({'id': cve})
-
     # get affected host information
             affectedHosts = len(hostCveMap[cve])
             listOfHosts = ""
@@ -75,11 +74,14 @@ def main():
                 listOfHosts += host + "; "
 
     # assemble record into a line of CSV
-            record = [ cve, "", cvedetails['summary'], cvedetails['cvss'],
-                    cvedetails['impact']['confidentiality'], cvedetails['impact']['integrity'],
-                    cvedetails['impact']['availability'], cvedetails['access']['vector'],
-                    cvedetails['access']['complexity'], cvedetails['access']['authentication'],
-                    affectedHosts, listOfHosts]
+            if (cvedetails): # if it's not empty!
+                record = [ cve, cvedetails['summary'], cvedetails['cvss'],
+                        cvedetails['impact']['confidentiality'], cvedetails['impact']['integrity'],
+                        cvedetails['impact']['availability'], cvedetails['access']['vector'],
+                        cvedetails['access']['complexity'], cvedetails['access']['authentication'],
+                        affectedHosts, listOfHosts ]
+            else:
+                record = [ cve, "", "", "", "", "", "", "", "", affectedHosts, listOfHosts ]
     # print assembled CSV line to output file
             linewriter.writerow(record)
 

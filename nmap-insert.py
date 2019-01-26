@@ -30,10 +30,18 @@ def main():
 
 # find and open the output XML file
     infile = open(sys.argv[1], 'r')
-    #xmlfile = infile.read()
 
 # Do this for each 'host' block in the output file
     for event, elem in iterparse(infile):
+#        if elem.tag == "runstats":
+#            finished = elem.find("finished")
+#            hosts = elem.find("hosts")
+#            elapsed = finished.get("elapsed")
+#            summary = finished.get("summary")
+#            hostsUp = hosts.get("up")
+#            hostsDown = hosts.get("down")
+#            hostsTotal = hosts.get("total")
+
         if elem.tag == "host":
             # add some defaults in case these come up empty
             macaddr = {'addr': "", 'vendor': "Unknown"}
