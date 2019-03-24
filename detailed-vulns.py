@@ -87,12 +87,12 @@ def main():
             affectedHosts = len(hostCveMap[cve])
             listOfHosts = []
             for host in hostCveMap[cve]:
-                listOfHosts += host
+                listOfHosts.append(host)
 
     # assemble into HTML
             line('h2', cve)
             line('b', 'Affected hosts: ')
-            text(listOfHosts.count)
+            text(affectedHosts)
             doc.stag('br')
             if (cvedetails): # if it's not empty!
                 with tag('table'):
