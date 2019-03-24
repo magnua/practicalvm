@@ -19,7 +19,6 @@ db = client['vulnmgt']
 # Output filename
 outputFile = "detailed-asset-report.html"
 
-
 # print usage and exit
 def usage():
     print ('''
