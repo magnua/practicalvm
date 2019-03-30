@@ -25,7 +25,7 @@ echo "Got report id $REPORTID"
 while true; do
     sleep 120
     STATUS=`omp $OMPCONFIG -X '<get_tasks task_id="'$TASKID'"/>' | xmllint --xpath 'get_tasks_response/task/status/text()' -`
-    if [ $STATUS = "Done" ]; then
+    if [ "$STATUS" = "Done" ]; then
         # generate output
         omp $OMPCONFIG -X '<get_reports report_id="'$REPORTID'"/>'|xmllint --format - > $OUTPUT/openvas-$TS.xml
         echo "Output XML to $OUTPUT/openvas-$TS.xml"
