@@ -126,6 +126,14 @@ def main():
                     with tag('tr'):
                         line('td', "Authentication")
                         line('td', cvedetails['access']['authentication'])
+                    with tag('tr'):
+                        with tag('td'):
+                            line('b', "References")
+                    for reference in cvedetails['references']:
+                        with tag('tr'):
+                            with tag('td'):
+                                with tag('a', href=reference):
+                                    text(reference)
 
             else: # if it's empty
                 line('i', "Details unknown -- update your CVE database")
