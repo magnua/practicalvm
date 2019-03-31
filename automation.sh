@@ -6,6 +6,11 @@
 
 # Preferably run as root due to Nmap requirements
 
+# comment this out if non-root/sudo is okay
+if [ $EUID != 0 ]; then
+	echo "Please run as root"
+	exit 1
+fi
 
 TS=`date +%Y%m%d`
 SCRIPTS=/home/andy/scripts
