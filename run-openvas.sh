@@ -10,8 +10,9 @@ TS=`date +%Y%m%d`
 
 #TARGET=e8b2417d-af95-4cda-9e35-36dda50896b5
 #CONFIG=daba56c8-73ec-11df-a475-002264764cea
-TASKID=d0bab8b8-0d03-419d-ae5f-6756a8de051c
-OMPCONFIG="-c /home/andy/omp.config"
+#TASKID=d0bab8b8-0d03-419d-ae5f-6756a8de051c
+TASKID=59380858-1c32-438c-9c8c-e705c6c718da
+OMPCONFIG="--config-file=/home/andy/omp.config"
 
 # create task
 #TASKID=`omp -C --target=$TARGET --config=$CONFIG --name="Scheduled Scan"`
