@@ -45,6 +45,12 @@ def main():
 
             # this won't go in the result document, but will be used
             # to find the result document we're inserting into or creating
+            # 
+            # some 'result' blocks are nested, and we want to ignore those!
+            # we can tell if it's one of those because it's missing stuff like
+            # the 'host' block
+            if (elem.find("host") == None):
+                continue
             ipaddr = elem.find("host").text
             (port, proto) = elem.find("port").text.split('/')
             result['port'] = port
