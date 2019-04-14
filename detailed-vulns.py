@@ -103,7 +103,7 @@ def main():
                             id=cvedetails['cwe'].split('-')[1]
                             with tag('a', href="https://cwe.mitre.org/definitions/"+id):
                                 text(cvedetails['cwe'])
-                            text(cvedb.cwe.find({'id': id})['name'])
+                            text(cvedb.cwe.findOne({'id': id})['name'])
                     with tag('tr'):
                         line('td', 'Published')
                         line('td', cvedetails['Published'].strftime("%Y-%m-%d"))
