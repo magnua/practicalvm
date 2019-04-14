@@ -100,6 +100,15 @@ def main():
                         line('td', 'Summary')
                         line('td', cvedetails['summary'])
                     with tag('tr'):
+                        line('td', 'CWE')
+                        line('td', cvedetails['cwe'])
+                    with tag('tr'):
+                        line('td', 'Published')
+                        line('td', cvedetails['Published'])
+                    with tag('tr'):
+                        line('td', 'Modified')
+                        line('td', cvedetails['Modified'])
+                    with tag('tr'):
                         line('td', 'CVSS')
                         line('td', cvedetails['cvss'])
                     with tag('tr'):
