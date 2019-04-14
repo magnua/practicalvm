@@ -76,13 +76,11 @@ def main():
             line('h1', 'Vulnerability report for ' + network)
 
 # now, for each CVE (sorted) that we've found...
-# TODO: check and possibly improve sort function here
         for cve in sorted(hostCveMap.keys()):
 
     # look up CVE details in cve-search database
             cvedetails = cvedb.cves.find_one({'id': cve})
 
-# TODO: add additional CVE information to HTML
     # get affected host information into a list
             affectedHosts = len(hostCveMap[cve])
             listOfHosts = []
@@ -101,7 +99,11 @@ def main():
                         line('td', cvedetails['summary'])
                     with tag('tr'):
                         line('td', 'CWE')
-                        line('td', cvedetails['cwe'])
+                        with tag('td'):
+                            id=cvedetails['cwe'].split('-')[1]
+                            with tag('a', href="https://cwe.mitre.org/definitions/"+id):
+                                text(cvedetails['cwe'])
+                            text(cvedb.cwe.find({'id': id})['name'])
                     with tag('tr'):
                         line('td', 'Published')
                         line('td', cvedetails['Published'].strftime("%Y-%m-%d"))
@@ -151,7 +153,6 @@ def main():
             line('b', "Affected hosts:")
             doc.stag('br')
             for host in sorted(listOfHosts):
-# TODO: add more host details
                 text(host)
                 doc.stag('br')
 
