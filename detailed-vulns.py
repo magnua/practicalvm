@@ -103,11 +103,11 @@ def main():
                                 id=cvedetails['cwe'].split('-')[1]
                                 with tag('a', href="https://cwe.mitre.org/data/definitions/"+id):
                                     text(cvedetails['cwe'])
-                                if cvedb.cwe.find_one({'id': id})['name']:
-                                    text("(" + cvedb.cwe.find_one({'id': id})['name'] + ")")
+                                cweDetails = cvedb.cwe.findOnefind_one({'id': id})
+                                if 'name' in cweDetails:
+                                    text("(" + cweDetails['name'] + ")")
                                 else:
                                     text("(no title)")
-                                #text(" ("+cvedb.cwe.find_one({'id': id})['name']+")")
                         with tag('tr'):
                             line('td', 'Published')
                             line('td', cvedetails['Published'].strftime("%Y-%m-%d"))
