@@ -170,8 +170,8 @@ def main():
     # loop is over, time to write the output file.
     # the 'indent' function will make the source more readable.
 
-            with open(outputFile, 'w') as htmlOut:
-                htmlOut.write(indent(doc.getvalue()))
-                htmlOut.close()
+    with open(outputFile, 'w') as htmlOut:
+        htmlOut.write(indent(doc.getvalue()))
+        htmlOut.close()
 
 main()
