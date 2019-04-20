@@ -157,8 +157,8 @@ def main():
                                 line('td', 'CVSS Base Vector')
                                 line('td', oidObj['cvss_base_vector'])
 
-    # for each associated CVE, print it out with basic information pulled
-    # from cvedb
+    # for each associated CVE, print it out with basic information
+    # TODO: pull more info from cvedb
                     oidCves = db.vulnerabilities.find_one({'oid': oidItem['oid']})['cve']
                     if oidCves != ['NOCVE']:
                         line('h5', 'Associated CVE(s):')
