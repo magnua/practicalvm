@@ -19,16 +19,6 @@ cvedb = client['cvedb']
 # Output filename
 outputFile = "detailed-vuln-report.html"
 
-# CSV column header
-#header = ['CVE ID', 'Description', 'CVSS', 'Confidentiality Impact', 'Integrity Impact', 'Availability Impact', 'Access Vector', 'Access Complexity', 'Authentication Required', 'Hosts Affected', 'List of Hosts']
-
-# print usage and exit
-def usage():
-    print ('''
-Usage: $ detailed-vulns.py <IP range in CIDR, optional>
-
-    ''')
-
 def main():
  # check if there's a network. If not, use 0.0.0.0
     if len(sys.argv) > 1:
