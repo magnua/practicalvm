@@ -76,85 +76,85 @@ def main():
             line('h1', 'Vulnerability report for ' + network)
 
 # now, for each CVE (sorted) that we've found...
-        for cve in sorted(hostCveMap.keys()):
+            for cve in sorted(hostCveMap.keys()):
 
-    # look up CVE details in cve-search database
-            cvedetails = cvedb.cves.find_one({'id': cve})
+        # look up CVE details in cve-search database
+                cvedetails = cvedb.cves.find_one({'id': cve})
 
-    # get affected host information into a list
-            affectedHosts = len(hostCveMap[cve])
-            listOfHosts = []
-            for host in hostCveMap[cve]:
-                listOfHosts.append(host)
+        # get affected host information into a list
+                affectedHosts = len(hostCveMap[cve])
+                listOfHosts = []
+                for host in hostCveMap[cve]:
+                    listOfHosts.append(host)
 
-    # assemble into HTML
-            line('h2', cve)
-            line('b', 'Affected hosts: ')
-            text(affectedHosts)
-            doc.stag('br')
-            if (cvedetails): # if it's not empty!
-                with tag('table'):
-                    with tag('tr'):
-                        line('td', 'Summary')
-                        line('td', cvedetails['summary'])
-                    with tag('tr'):
-                        line('td', 'CWE')
-                        with tag('td'):
-                            id=cvedetails['cwe'].split('-')[1]
-                            with tag('a', href="https://cwe.mitre.org/data/definitions/"+id):
-                                text(cvedetails['cwe'])
-                            text(" ("+cvedb.cwe.find_one({'id': id})['name']+")")
-                    with tag('tr'):
-                        line('td', 'Published')
-                        line('td', cvedetails['Published'].strftime("%Y-%m-%d"))
-                    with tag('tr'):
-                        line('td', 'Modified')
-                        line('td', cvedetails['Modified'].strftime("%Y-%m-%d"))
-                    with tag('tr'):
-                        line('td', 'CVSS')
-                        line('td', cvedetails['cvss'])
-                    with tag('tr'):
-                        with tag('td'):
-                            line('b', 'Impacts')
-                    with tag('tr'):
-                        line('td', "Confidentiality")
-                        line('td', cvedetails['impact']['confidentiality'])
-                    with tag('tr'):
-                        line('td', "Integrity")
-                        line('td', cvedetails['impact']['integrity'])
-                    with tag('tr'):
-                        line('td', "Availability")
-                        line('td', cvedetails['impact']['availability'])
-                    with tag('tr'):
-                        with tag('td'):
-                            line('b', 'Access')
-                    with tag('tr'):
-                        line('td', "Vector")
-                        line('td', cvedetails['access']['vector'])
-                    with tag('tr'):
-                        line('td', "Complexity")
-                        line('td', cvedetails['access']['complexity'])
-                    with tag('tr'):
-                        line('td', "Authentication")
-                        line('td', cvedetails['access']['authentication'])
-                    with tag('tr'):
-                        with tag('td'):
-                            line('b', "References")
-                    for reference in cvedetails['references']:
+        # assemble into HTML
+                line('h2', cve)
+                line('b', 'Affected hosts: ')
+                text(affectedHosts)
+                doc.stag('br')
+                if (cvedetails): # if it's not empty!
+                    with tag('table'):
+                        with tag('tr'):
+                            line('td', 'Summary')
+                            line('td', cvedetails['summary'])
+                        with tag('tr'):
+                            line('td', 'CWE')
+                            with tag('td'):
+                                id=cvedetails['cwe'].split('-')[1]
+                                with tag('a', href="https://cwe.mitre.org/data/definitions/"+id):
+                                    text(cvedetails['cwe'])
+                                text(" ("+cvedb.cwe.find_one({'id': id})['name']+")")
+                        with tag('tr'):
+                            line('td', 'Published')
+                            line('td', cvedetails['Published'].strftime("%Y-%m-%d"))
+                        with tag('tr'):
+                            line('td', 'Modified')
+                            line('td', cvedetails['Modified'].strftime("%Y-%m-%d"))
+                        with tag('tr'):
+                            line('td', 'CVSS')
+                            line('td', cvedetails['cvss'])
                         with tag('tr'):
                             with tag('td'):
-                                with tag('a', href=reference):
-                                    text(reference)
+                                line('b', 'Impacts')
+                        with tag('tr'):
+                            line('td', "Confidentiality")
+                            line('td', cvedetails['impact']['confidentiality'])
+                        with tag('tr'):
+                            line('td', "Integrity")
+                            line('td', cvedetails['impact']['integrity'])
+                        with tag('tr'):
+                            line('td', "Availability")
+                            line('td', cvedetails['impact']['availability'])
+                        with tag('tr'):
+                            with tag('td'):
+                                line('b', 'Access')
+                        with tag('tr'):
+                            line('td', "Vector")
+                            line('td', cvedetails['access']['vector'])
+                        with tag('tr'):
+                            line('td', "Complexity")
+                            line('td', cvedetails['access']['complexity'])
+                        with tag('tr'):
+                            line('td', "Authentication")
+                            line('td', cvedetails['access']['authentication'])
+                        with tag('tr'):
+                            with tag('td'):
+                                line('b', "References")
+                        for reference in cvedetails['references']:
+                            with tag('tr'):
+                                with tag('td'):
+                                    with tag('a', href=reference):
+                                        text(reference)
 
-            else: # if it's empty
-                line('i', "Details unknown -- update your CVE database")
-                doc.stag('br')
+                else: # if it's empty
+                    line('i', "Details unknown -- update your CVE database")
+                    doc.stag('br')
 
-            line('b', "Affected hosts:")
-            doc.stag('br')
-            for host in sorted(listOfHosts):
-                text(host)
+                line('b', "Affected hosts:")
                 doc.stag('br')
+                for host in sorted(listOfHosts):
+                    text(host)
+                    doc.stag('br')
 
 # output final HTML
     with open(outputFile, 'w') as htmlOut:
