@@ -83,9 +83,7 @@ def main():
 
         # get affected host information into a list
                 affectedHosts = len(hostCveMap[cve])
-                listOfHosts = []
-                for host in hostCveMap[cve]:
-                    listOfHosts.append(host)
+                listOfHosts = hostCveMap[cve]
 
         # assemble into HTML
                 line('h2', cve)
