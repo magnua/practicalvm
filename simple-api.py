@@ -31,7 +31,7 @@ def getHostDetails(hostid):
         if response:
             oids = db.hosts.distinct('oids.oid', {'ip': hostid})
             for oid in oids:
-                oidInfo = db.vulnerability.find_one({'oids.oid': oid})
+                oidInfo = db.vulnerabilities.find_one({'oid': oid})
                 if 'cve' in oidInfo.keys():
                     cveList += oidInfo['cve']
             # remove NOCVE
