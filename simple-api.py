@@ -8,14 +8,10 @@
 # v0.1
 # Andrew Magnusson
 
-import http.server
-import socketserver
-import json, re
+import http.server, socketserver, json, re, ipaddress
 from bson.json_util import dumps # for encoding mongo results
 from pymongo import MongoClient
-import ipaddress # for ip checking
 from io import BytesIO # for encoding responses
-from urllib import parse
 
 # globals
 # Mongo connection parameters
