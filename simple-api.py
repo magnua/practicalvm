@@ -35,8 +35,8 @@ def getHostDetails(hostid):
                 oidInfo = db.vulnerabilities.find_one({'oid': oid})
                 if 'cve' in oidInfo.keys():
                     cveList += oidInfo['cve']
-            # remove NOCVE
-            cveList.remove('NOCVE')
+            if 'NOCVE' in cveList:
+                cveList.remove('NOCVE')
             response['cves'] = cveList
         else:
             response = [{'error': 'IP ' + hostid + ' not found'}]
@@ -71,7 +71,8 @@ def listHosts():
 
 def listVulns():
     results = db.vulnerabilities.distinct('cve')
-    results.remove('NOCVE') # we don't care about these
+    if 'NOCVE' in results:
+        results.remove('NOCVE') # we don't care about these
     count = len(results)
     response = [{'count': count, 'cvelist': results}]
     return json.dumps(response)
