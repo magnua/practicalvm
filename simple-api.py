@@ -31,8 +31,11 @@ def getHostDetails(hostid):
         if response:
             oids = db.hosts.distinct('oids.oid', {'ip': hostid})
             for oid in oids:
-                cves = db.vulnerability.find_one({'oid': oid})['cve']
-                cveList += cves
+                oidInfo = db.vulnerability.find_one({'oid': oid})
+                if oidInfo['cve']:
+                    cveList += oidInfo['cve']
+            # remove NOCVE
+            cveList.remove('NOCVE')
             response['cves'] = cveList
         else:
             response = [{'error': 'IP ' + hostid + ' not found'}]
