@@ -40,9 +40,13 @@ def getVulnDetails(cveid):
     # check if it's in the format CVE-XXXX-XXXX[XX]
     if (re.fullmatch('CVE-\d{4}-\d{4,}', cveid)):
         response = db.vulnerabilities.find_one({'cve': cveid})
-        oid = response['oid']
-        result = db.hosts.distinct('ip', {'oids.oid': oid})
-        response['affectedhosts'] = result
+        if response: # there's a cve in there
+            oid = response['oid']
+            result = db.hosts.distinct('ip', {'oids.oid': oid})
+            response['affectedhosts'] = result
+        else:
+            response = [{'error': 'no hosts affected by ' + cveid}]
+            code = ERRORCODE
     else:
         response = [{'error': cveid + ' is not a valid CVE ID'}]
         code = ERRORCODE
