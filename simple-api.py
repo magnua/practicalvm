@@ -8,10 +8,16 @@
 import http.server
 import socketserver
 import json, re
+from pymongo import MongoClient
 import ipaddress # for ip checking
 from io import BytesIO # for encoding responses
 from urllib import parse
 
+# globals
+# Mongo connection parameters
+client = MongoClient('mongodb://localhost:27017')
+db = client['vulnmgt']
+# HTTP parameters
 PORT=8000
 ERRORCODE=418 # I'm a teapot
 
@@ -41,13 +47,16 @@ def getVulnDetails(cveid):
     return code, json.dumps(response)
 
 def listHosts():
-    response = [{'count': 0, 'list': []}]
-    # TODO: build and return list of IP addresses in db
+    results = db.hosts.distinct('ip')
+    count = len(results)
+    response =  [{'count': count, 'iplist': results}]
     return json.dumps(response)
 
 def listVulns():
-    response = [{'count': 0, 'list': []}]
-    # TODO: build and return list of vulnerabilities (by CVE) in db
+    results = db.vulnerabilities.distinct('cve')
+    results.remove('NOCVE') # we don't care about these
+    count = len(results)
+    response = [{'count': count, 'cvelist': results}]
     return json.dumps(response)
 
 class SimpleRequestHandler(http.server.BaseHTTPRequestHandler):
