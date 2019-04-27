@@ -5,6 +5,9 @@
 # /hosts/list, /hosts/{id}
 # /vulnerabilities/list, /vulnerabilities/{id}
 
+# v0.1
+# Andrew Magnusson
+
 import http.server
 import socketserver
 import json, re
@@ -108,12 +111,13 @@ class SimpleRequestHandler(http.server.BaseHTTPRequestHandler):
             self.send_response(ERRORCODE)
             response.write(json.dumps([{'error': 'unrecognized path ' + self.path}]).encode())
         self.end_headers()
-        
+    
         self.wfile.write(response.getvalue())
 
+def main():
+    Handler = SimpleRequestHandler
 
-Handler = SimpleRequestHandler
+    with socketserver.TCPServer(("", PORT), Handler) as httpd:
+        httpd.serve_forever()
 
-with socketserver.TCPServer(("", PORT), Handler) as httpd:
-    print("serving at port", PORT)
-    httpd.serve_forever()
+main()
