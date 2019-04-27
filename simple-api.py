@@ -28,8 +28,15 @@ def getHostDetails(hostid):
     try:
         ipaddress.ip_address(hostid)
         response = db.hosts.find_one({'ip': hostid})
-        # TODO: get the list of vulnerabilities and add to 'response'
-
+        if response:
+            oids = db.hosts.distinct('oids.oid', {'ip': hostid})
+            for oid in oids:
+                cves = db.vulnerability.find_one({'oid': oid})['cve']
+                cveList += cves
+            response['cves'] = cveList
+        else:
+            response = [{'error': 'IP ' + hostid + ' not found'}]
+            code = ERRORCODE
     except ValueError:
         response= [{'error': hostid + ' is not a valid IP address'}]
         code = ERRORCODE
