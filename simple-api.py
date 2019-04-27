@@ -8,6 +8,7 @@
 import http.server
 import socketserver
 import json, re
+from bson.json_util import dumps # for encoding mongo results
 from pymongo import MongoClient
 import ipaddress # for ip checking
 from io import BytesIO # for encoding responses
@@ -32,7 +33,7 @@ def getHostDetails(hostid):
     except ValueError:
         response= [{'error': hostid + ' is not a valid IP address'}]
         code = ERRORCODE
-    return code, json.dumps(response)
+    return code, dumps(response)
 
 def getVulnDetails(cveid):
     code = 200
@@ -43,7 +44,7 @@ def getVulnDetails(cveid):
     else:
         response = [{'error': cveid + ' is not a valid CVE ID'}]
         code = ERRORCODE
-    return code, json.dumps(response)
+    return code, dumps(response)
 
 def listHosts():
     results = db.hosts.distinct('ip')
