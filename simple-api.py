@@ -26,9 +26,9 @@ def getHostDetails(hostid):
     # check if it's a valid ip
     try:
         ipaddress.ip_address(hostid)
-        # TODO: build and return host details
-        # including list of vulnerabilities
-        response = [{'host': hostid, 'info': 'info goes here', 'vulnerabilities': ['CVE-XXXX-XXXX', 'CVE-YYYY-YYYY']}]
+        response = db.hosts.find_one({'ip': hostid})
+        # TODO: get the list of vulnerabilities and add to 'response'
+
     except ValueError:
         response= [{'error': hostid + ' is not a valid IP address'}]
         code = ERRORCODE
@@ -38,9 +38,8 @@ def getVulnDetails(cveid):
     code = 200
     # check if it's in the format CVE-XXXX-XXXX[XX]
     if (re.fullmatch('CVE-\d{4}-\d{4,}', cveid)):
-        # TODO: build and return vulnerability details for CVE
-        # including list of hosts vulnerable
-        response = [{'cve': cveid, 'summary': 'summary goes here', 'affectedhosts': ['x.x.x.x', 'y.y.y.y']}]
+        response = db.vulnerabilities.find_one({'cve': cveid})
+        # TODO: add list of affected hosts
     else:
         response = [{'error': cveid + ' is not a valid CVE ID'}]
         code = ERRORCODE
