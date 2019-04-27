@@ -42,7 +42,7 @@ def getHostDetails(hostid):
             response = [{'error': 'IP ' + hostid + ' not found'}]
             code = ERRORCODE
     except ValueError as e:
-        response= [{'error': e}]
+        response= [{'error': str(e)}]
         code = ERRORCODE
     return code, dumps(response)
 
