@@ -3,7 +3,7 @@
 # Simple vulnerability report script
 # Runs against all known vulnerabilities in the Mongo database
 # Output is in CSV format
-# v0.1
+# v0.2
 # Andrew Magnusson
 
 from pymongo import MongoClient
@@ -74,7 +74,13 @@ def main():
                 listOfHosts += host + "; "
 
     # assemble record into a line of CSV
+            
             if (cvedetails): # if it's not empty!
+                if "impact" not in cvedetails:
+                    cvedetails["impact"] = {"availability": None, "confidentiality": None, "integrity": None }
+                if "access" not in cvedetails:
+                    cvedetails["access"] = {"authentication": None, "complexity": None, "vector": None }
+                    
                 record = [ cve, cvedetails['summary'], cvedetails['cvss'],
                         cvedetails['impact']['confidentiality'], cvedetails['impact']['integrity'],
                         cvedetails['impact']['availability'], cvedetails['access']['vector'],
