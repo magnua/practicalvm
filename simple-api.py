@@ -82,10 +82,10 @@ class SimpleRequestHandler(http.server.BaseHTTPRequestHandler):
         response = BytesIO()
         splitPath = self.path.split('/')
         if (splitPath[1] == 'vulnerabilities'):
-            if(splitPath[2] == 'list'):
+            if(len(splitPath) == 3  and splitPath[2] == 'list'):
                 self.send_response(200)
                 response.write(listVulns().encode())
-            elif(splitPath[2]):
+            elif(len(splitPath) == 3):
                 code, details = getVulnDetails(splitPath[2])
                 self.send_response(code)
                 response.write(details.encode())
@@ -93,10 +93,10 @@ class SimpleRequestHandler(http.server.BaseHTTPRequestHandler):
                 self.send_response(ERRORCODE)
                 response.write(json.dumps([{'error': 'did you mean /vulnerabilities/list?'}]).encode())
         elif (splitPath[1] == 'hosts'):
-            if(splitPath[2] == 'list'):
+            if(len(splitPath) == 3 and splitPath[2] == 'list'):
                 self.send_response(200)
                 response.write(listHosts().encode())
-            elif(splitPath[2]):
+            elif(len(splitPath) == 3):
                 code, details = getHostDetails(splitPath[2])
                 self.send_response(code)
                 response.write(details.encode())
