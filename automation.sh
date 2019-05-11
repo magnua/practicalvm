@@ -24,7 +24,7 @@ LOG=/home/andy/output-$TS.log
 # line containing the date and time to an empty file
 date > ${LOG}
 
-nmap -A -oX $OUTPUT/nmap-$TS.xml $RANGE >> $LOG
+nmap -A -O -oX $OUTPUT/nmap-$TS.xml $RANGE >> $LOG
 
 $SCRIPTS/nmap-insert.py $OUTPUT/nmap-$TS.xml >> $LOG
 
