@@ -19,13 +19,13 @@ OMPCONFIG="--config-file=/home/andy/omp.config"
 #echo "Created task $TASKID"
 
 # run task and get report ID
-REPORTID=`omp $OMPCONFIG -X '<start_task task_id="'$TASKID'"/>' | xmllint --xpath '/start_task_response/report_id/text()' -`
+REPORTID=`omp $OMPCONFIG --start-task $TASKID | xmllint --xpath '/start_task_response/report_id/text()' -`
 echo "Got report id $REPORTID"
 
 # monitor task
 while true; do
     sleep 120
-    STATUS=`omp $OMPCONFIG -X '<get_tasks task_id="'$TASKID'"/>' | xmllint --xpath 'get_tasks_response/task/status/text()' -`
+    STATUS=`omp $OMPCONFIG -R $TASKID | xmllint --xpath 'get_tasks_response/task/status/text()' -`
     if [ "$STATUS" = "Done" ]; then
         # generate output
         omp $OMPCONFIG -X '<get_reports report_id="'$REPORTID'"/>'|xmllint --format - > $OUTPUT/openvas-$TS.xml
