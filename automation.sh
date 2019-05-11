@@ -38,4 +38,7 @@ mv $SCRIPTS/asset-report.csv $OUTPUT/asset-report-$TS.csv
 $SCRIPTS/vuln-report.py >> $LOG
 mv $SCRIPTS/vuln-report.csv $OUTPUT/vuln-report-$TS.csv
 
+echo "Running database cleanup script." >> $LOG
+$SCRIPTS/db-clean.py
+
 echo "Finished." >> $LOG
