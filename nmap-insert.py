@@ -98,13 +98,13 @@ def main():
 
             # check if this host exists already
             # update if so, insert if not.
-            if db.hosts.count({'ip': ipaddr}) > 0:
+            if db.hosts.count_documents({'ip': ipaddr}) > 0:
                 db.hosts.update_one(
                         {"ip": ipaddr},
                         {"$set": host}
                         )
             else:
-                db.hosts.insert(host)
+                db.hosts.insert_one(host)
 
 
 
