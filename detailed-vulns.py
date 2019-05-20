@@ -88,7 +88,11 @@ def main():
                         with tag('tr'):
                             line('td', 'CWE')
                             with tag('td'):
-                                id=cvedetails['cwe'].split('-')[1]
+
+                                id = 'Unknown'
+                                if cvedetails['cwe'] != 'Unknown':
+                                    id=cvedetails['cwe'].split('-')[1]
+
                                 with tag('a', href="https://cwe.mitre.org/data/definitions/"+id):
                                     text(cvedetails['cwe'])
                                 cweDetails = cvedb.cwe.find_one({'id': id})
@@ -104,31 +108,35 @@ def main():
                             line('td', cvedetails['Modified'].strftime("%Y-%m-%d"))
                         with tag('tr'):
                             line('td', 'CVSS')
-                            line('td', cvedetails['cvss'])
+                            line('td', cvedetails['cvss'] or 'Unknown')
                         with tag('tr'):
                             with tag('td'):
                                 line('b', 'Impacts')
-                        with tag('tr'):
-                            line('td', "Confidentiality")
-                            line('td', cvedetails['impact']['confidentiality'])
-                        with tag('tr'):
-                            line('td', "Integrity")
-                            line('td', cvedetails['impact']['integrity'])
-                        with tag('tr'):
-                            line('td', "Availability")
-                            line('td', cvedetails['impact']['availability'])
+                        if 'impact' in cvedetails:
+                            with tag('tr'):
+                                line('td', "Confidentiality")
+                                
+                                line('td', cvedetails['impact']['confidentiality'])
+                            with tag('tr'):
+                                line('td', "Integrity")
+                                line('td', cvedetails['impact']['integrity'])
+                            with tag('tr'):
+                                line('td', "Availability")
+                                line('td', cvedetails['impact']['availability'])
                         with tag('tr'):
                             with tag('td'):
                                 line('b', 'Access')
-                        with tag('tr'):
-                            line('td', "Vector")
-                            line('td', cvedetails['access']['vector'])
-                        with tag('tr'):
-                            line('td', "Complexity")
-                            line('td', cvedetails['access']['complexity'])
-                        with tag('tr'):
-                            line('td', "Authentication")
-                            line('td', cvedetails['access']['authentication'])
+                        if 'access' in cvedetails:
+                            
+                            with tag('tr'):
+                                line('td', "Vector")
+                                line('td', cvedetails['access']['vector'])
+                            with tag('tr'):
+                                line('td', "Complexity")
+                                line('td', cvedetails['access']['complexity'])
+                            with tag('tr'):
+                                line('td', "Authentication")
+                                line('td', cvedetails['access']['authentication'])
                         with tag('tr'):
                             with tag('td'):
                                 line('b', "References")
