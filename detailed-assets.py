@@ -86,7 +86,8 @@ def main():
                 text(os + " (" + str(cpe) + ")")
                 doc.stag('br')
                 line('b', 'MAC address: ')
-                text("{} ({})".format(details['mac']['addr'], details['mac']['vendor']))
+                if all (k in details['mac'] for k in ('addr', 'vendor')):
+                    text("{} ({})".format(details['mac']['addr'], details['mac']['vendor']))
 
     # construct open ports and services matrices (TCP and UDP)
     # and sort them for display
