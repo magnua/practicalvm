@@ -2,10 +2,10 @@
 
 # (Very) simple API to get information from the VM system
 # Accepts GET requests of the following URL structures:
-# /hosts/list, /hosts/{id}
-# /vulnerabilities/list, /vulnerabilities/{id}
+# /hosts/, /hosts/{id}
+# /vulnerabilities/, /vulnerabilities/{id}
 
-# v0.1
+# v0.2
 # Andrew Magnusson
 
 import http.server, socketserver, json, re, ipaddress
@@ -82,7 +82,7 @@ class SimpleRequestHandler(http.server.BaseHTTPRequestHandler):
         response = BytesIO()
         splitPath = self.path.split('/')
         if (splitPath[1] == 'vulnerabilities'):
-            if(len(splitPath) == 3  and splitPath[2] == 'list'):
+            if(len(splitPath) == 2 or (len(splitPath) == 3  and splitPath[2] == '')):
                 self.send_response(200)
                 response.write(listVulns().encode())
             elif(len(splitPath) == 3):
@@ -91,9 +91,9 @@ class SimpleRequestHandler(http.server.BaseHTTPRequestHandler):
                 response.write(details.encode())
             else:
                 self.send_response(ERRORCODE)
-                response.write(json.dumps([{'error': 'did you mean /vulnerabilities/list?'}]).encode())
+                response.write(json.dumps([{'error': 'did you mean /vulnerabilities/?'}]).encode())
         elif (splitPath[1] == 'hosts'):
-            if(len(splitPath) == 3 and splitPath[2] == 'list'):
+            if(len(splitPath) == 2 or (len(splitPath) == 3 and splitPath[2] == '')):
                 self.send_response(200)
                 response.write(listHosts().encode())
             elif(len(splitPath) == 3):
@@ -102,7 +102,7 @@ class SimpleRequestHandler(http.server.BaseHTTPRequestHandler):
                 response.write(details.encode())
             else:
                 self.send_response(ERRORCODE)
-                response.write(json.dumps([{'error': 'did you mean /hosts/list?'}]).encode())
+                response.write(json.dumps([{'error': 'did you mean /hosts/?'}]).encode())
         else:
             self.send_response(ERRORCODE)
             response.write(json.dumps([{'error': 'unrecognized path ' + self.path}]).encode())
