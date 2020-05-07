@@ -1,0 +1,16 @@
+# add to /lib/systemd/system/ or the equivalent for your system
+# then `systemctl enable simple-api.service; systemctl daemon reload`
+[Unit]
+Description=SystemD script for simple-api.py
+DefaultDependencies=no
+Wants=network-pre.target
+
+[Service]
+Type=simple
+RemainAfterExit=false
+ExecStart=/path/to/scripts/simple-api.py
+ExecStop=/usr/bin/killall simple-api
+TimeoutStopSec=30s
+
+[Install]
+WantedBy=multi-user.target    
