@@ -3,32 +3,26 @@ OUTPUT=/home/andy/output
 TS=`date +%Y%m%d`
 
 # run-openvas.sh
-# v0.1
+# v0.2
 # Andrew Magnusson
 
-# must be run as scanuser or otherwise pointing to omp.config
+# Updated 1/1/2021 to use `gvm-cli` rather than `omp`
 
-#TARGET=e8b2417d-af95-4cda-9e35-36dda50896b5
-#CONFIG=daba56c8-73ec-11df-a475-002264764cea
-#TASKID=d0bab8b8-0d03-419d-ae5f-6756a8de051c
-TASKID=59380858-1c32-438c-9c8c-e705c6c718da
-OMPCONFIG="--config-file=/home/andy/omp.config"
-
-# create task
-#TASKID=`omp -C --target=$TARGET --config=$CONFIG --name="Scheduled Scan"`
-#echo "Created task $TASKID"
+# get task ID of the scan you want to run
+TASKID=c0e12f87-9e5b-44ea-820b-c9471db66dfb
+GMPCONFIG="-c /home/andy/gmp.config socket"
 
 # run task and get report ID
-REPORTID=`omp $OMPCONFIG --start-task $TASKID | xmllint --xpath '/start_task_response/report_id/text()' -`
+REPORTID=`gvm-cli $GMPCONFIG -X "<start_task task_id=\"$TASKID\"/>" | xmllint --xpath '/start_task_response/report_id/text()' -`
 echo "Got report id $REPORTID"
 
 # monitor task
 while true; do
     sleep 120
-    STATUS=`omp $OMPCONFIG -R $TASKID | xmllint --xpath 'get_tasks_response/task/status/text()' -`
+    STATUS=`gvm-cli $GMPCONFIG -X "<get_tasks task_id=\"$TASKID\"/>" | xmllint --xpath 'get_tasks_response/task/status/text()' -`
     if [ "$STATUS" = "Done" ]; then
         # generate output
-        omp $OMPCONFIG -X '<get_reports report_id="'$REPORTID'"/>'|xmllint --format - > $OUTPUT/openvas-$TS.xml
+        gvm-cli $GMPCONFIG -X '<get_reports report_id="'$REPORTID'" details="1"/>' --pretty > $OUTPUT/openvas-$TS.xml
         echo "Output XML to $OUTPUT/openvas-$TS.xml"
         break
     fi
