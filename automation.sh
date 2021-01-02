@@ -1,8 +1,10 @@
 #!/bin/bash
 
 # automation.sh
-# v0.1
+# v0.2
 # Andrew Magnusson
+
+# 0.2: `run-openvas.sh` now runs as nonprivileged user
 
 # Preferably run as root due to Nmap requirements
 
