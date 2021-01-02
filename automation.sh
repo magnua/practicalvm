@@ -28,8 +28,9 @@ nmap -A -O -oX $OUTPUT/nmap-$TS.xml $RANGE >> $LOG
 
 $SCRIPTS/nmap-insert.py $OUTPUT/nmap-$TS.xml >> $LOG
 
-# ensure u/p are set in ~/omp.config
-$SCRIPTS/run-openvas.sh >> $LOG
+# ensure u/p are set in ~/gmp.config
+# `gmp-cli` will not run as root
+sudo -u ubuntu $SCRIPTS/run-openvas.sh >> $LOG
 
 $SCRIPTS/openvas-insert.py $OUTPUT/openvas-$TS.xml >> $LOG
 
