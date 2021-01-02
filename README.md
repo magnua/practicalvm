@@ -8,5 +8,7 @@ This folder contains code listings **as they appear in the published book**. The
 Scripts in the root directory of the repo may have been changed (and hopefully improved) since the book was published.
 
 ## News
+### 1/2/2021
+As promised, [here](docs/gvm-11.md) is a basic doc on installing GVM 11 for use with this VM system.
 ### 1/1/2021
 Happy new year! :tada: I've updated a few scripts so you can now use them with GVM 11. I'll have another doc up soon with a few notes on installing GVM 11 from mrazavi's packages at https://launchpad.net/~mrazavi/+archive/ubuntu/gvm.
