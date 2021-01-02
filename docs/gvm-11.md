@@ -22,6 +22,7 @@ In brief, follow the directions at https://launchpad.net/~mrazavi/+archive/ubunt
 * Relatedly, `omp.config` is now `gvm.config`.
 * Programmatic access to GVM via Python is now possible! While I've minimized the changes to the OpenVAS scripts for the sake of continuity, it's entirely plausible now to rewrite `openvas-insert.py` to both conduct the scan and insert the results into Mongo. To use the Python library, check out the docs at https://python-gvm.readthedocs.io/en/latest/.
 * As alluded to above, `greenbone-nvt-sync` must **not** be run as root. I've updated `update-tools.sh` to ensure it's run as a nonprivileged user.
+* `gvm-cli` also refuses to run as root, so I've updated `automation.sh` to run it as a standard user as well.
 
 ## Upgrading from OpenVAS 9
 
