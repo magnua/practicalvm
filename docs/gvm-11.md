@@ -22,3 +22,9 @@ In brief, follow the directions at https://launchpad.net/~mrazavi/+archive/ubunt
 * Relatedly, `omp.config` is now `gvm.config`.
 * Programmatic access to GVM via Python is now possible! While I've minimized the changes to the OpenVAS scripts for the sake of continuity, it's entirely plausible now to rewrite `openvas-insert.py` to both conduct the scan and insert the results into Mongo. To use the Python library, check out the docs at https://python-gvm.readthedocs.io/en/latest/.
 * As alluded to above, `greenbone-nvt-sync` must **not** be run as root. I've updated `update-tools.sh` to ensure it's run as a nonprivileged user.
+
+## Upgrading from OpenVAS 9
+
+Bad news: there's no good way to do it, at least not on Ubuntu. After OpenVAS 9, GVM 10 introduced a new database format, and added the option to use Postgres (as opposed to SQLite). GVM 11 removed the option for SQLite. Unfortunately, the database migration tool (from OpenVAS 9 to GVM 10) was only available in GVM 10, and mrazavi is no longer providing those packages for Ubuntu. Until or unless someone (probably not me) has time to compile GVM 10 from source, there's no valid upgrade path from OpenVAS 9 to GVM 11.
+
+During my testing I removed OpenVAS 9 and installed GVM 11, but ran into a bunch of package conflicts. I'd suggest starting fresh, if possible. You'll need to rebuild your targets and tasks, but that's a one-time thing.
