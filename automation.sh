@@ -34,7 +34,7 @@ $SCRIPTS/nmap-insert.py $OUTPUT/nmap-$TS.xml >> $LOG
 # `gmp-cli` will not run as root
 sudo -u ubuntu $SCRIPTS/run-gvm.sh >> $LOG
 
-$SCRIPTS/openvas-insert.py $OUTPUT/gvm-$TS.xml >> $LOG
+$SCRIPTS/gvm-insert.py $OUTPUT/gvm-$TS.xml >> $LOG
 
 $SCRIPTS/asset-report.py >> $LOG
 mv $SCRIPTS/asset-report.csv $OUTPUT/asset-report-$TS.csv
