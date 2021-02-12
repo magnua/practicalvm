@@ -17,12 +17,11 @@ In brief, follow the directions at https://launchpad.net/~mrazavi/+archive/ubunt
 
 ## Major differences from the print book
 
-* The system is no longer called **OpenVAS** -- it's **Greenbone Vulnerability Management (GVM)**. The scanner process itself is still OpenVAS however. For continuity I'm still calling the script `run-openvas.sh` even though it is talking to GVM.
-* `omp` is now deprecated -- CLI access to the scanner system is via `gvm-cli`. It doesn't support all of the same CLI arguments so there is now a bit more XML in `run-openvas.sh`. Notably, the `<get_reports/>` tag now includes `details="1"` as otherwise GVM will only return a summary report.
+* The system is no longer called **OpenVAS** -- it's **Greenbone Vulnerability Management (GVM)**. The scanner process itself is still OpenVAS however. I've renamed all 'openvas' scripts to 'gvm' instead.
+* `omp` is now deprecated -- CLI access to the scanner system is via `gvm-cli`. It doesn't support all of the same CLI arguments so there is now a bit more XML in `run-gvm.sh`. Notably, the `<get_reports/>` tag now includes `details="1"` as otherwise GVM will only return a summary report.
 * Relatedly, `omp.config` is now `gvm.config`.
 * Programmatic access to GVM via Python is now possible! While I've minimized the changes to the OpenVAS scripts for the sake of continuity, it's entirely plausible now to rewrite `openvas-insert.py` to both conduct the scan and insert the results into Mongo. To use the Python library, check out the docs at https://python-gvm.readthedocs.io/en/latest/.
 * As alluded to above, `greenbone-nvt-sync` must **not** be run as root. I've updated `update-tools.sh` to ensure it's run as a nonprivileged user.
-* Renamed 'openvas' scripts to 'gvm' instead
 * `gvm-cli` also refuses to run as root, so I've updated `automation.sh` to run `run-gvm.sh` as a standard user as well.
 
 ## Upgrading from OpenVAS 9
