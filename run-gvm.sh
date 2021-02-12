@@ -22,8 +22,8 @@ while true; do
     STATUS=`gvm-cli $GMPCONFIG -X "<get_tasks task_id=\"$TASKID\"/>" | xmllint --xpath 'get_tasks_response/task/status/text()' -`
     if [ "$STATUS" = "Done" ]; then
         # generate output
-        gvm-cli $GMPCONFIG -X '<get_reports report_id="'$REPORTID'" details="1"/>' --pretty > $OUTPUT/openvas-$TS.xml
-        echo "Output XML to $OUTPUT/openvas-$TS.xml"
+        gvm-cli $GMPCONFIG -X '<get_reports report_id="'$REPORTID'" details="1"/>' --pretty > $OUTPUT/gvm-$TS.xml
+        echo "Output XML to $OUTPUT/gvm-$TS.xml"
         break
     fi
 done
