@@ -1,3 +1,5 @@
 # ignore all current output file types
 *.html
 *.csv
+.vscode/*
+.DS_Store
