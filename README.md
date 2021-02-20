@@ -8,6 +8,13 @@ This folder contains code listings **as they appear in the published book**. The
 Scripts in the root directory of the repo may have been changed (and hopefully improved) since the book was published.
 
 ## News
+### 2/20/21
+I've renamed the default branch from `master` to `main`. To update your local environment, please run the following:
+```
+git branch -m master main
+git fetch origin
+git branch -u origin/main main
+```
 ### 1/2/2021
 As promised, [here](docs/gvm-11.md) is a basic doc on installing GVM 11 for use with this VM system.
 ### 1/1/2021
