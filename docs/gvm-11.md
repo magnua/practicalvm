@@ -12,7 +12,7 @@ In brief, follow the directions at https://launchpad.net/~mrazavi/+archive/ubunt
 
 * During the install, the package will enable a Redis socket and initialize the Postgres database. It's fine to stick with the defaults, or choose your own password if you prefer.
 * Before running `$ greenbone-nvt-sync`, you'll need to change the ownership of `/var/lib/openvas/plugins` to the user you expect to be running your VM system. Basically anything but root, because that script will complain (and fail) if you run it as root.
-* Add to `/etc/default/gvmd`: `DAEMON_ARGS="--listen-group ubuntu"` (replace `ubuntu` with the user group of your VM system user) then restart gvmd with `$ sudo systemctl restart gvmd`. This will let the new `run-openvas.sh` script access the GVM socket.
+* Add to `/etc/default/gvmd`: `DAEMON_ARGS="--listen-group ubuntu"` (replace `ubuntu` with the user group of your VM system user) then restart gvmd with `$ sudo systemctl restart gvmd`. This will let the new `run-gvm.sh` script access the GVM socket.
 * Assuming you want to get into the Greenbone web UI from another system, you'll need to update `/etc/default/gsad` to listen on `0.0.0.0` then restart GSA with `$ sudo systemctl restart gsad`. At that point you'll be able to reach the UI at (**note new port!**) `https://<ipaddr>:9392`
 
 ## Major differences from the print book
