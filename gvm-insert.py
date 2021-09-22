@@ -70,9 +70,19 @@ def main():
             result['cvss'] = cvss
 
             # these fields might contain one or more comma-separated values.
-            result['cve'] = nvtblock.find("cve").text.split(", ")
+            # result['cve'] = nvtblock.find("cve").text.split(", ")
             result['bid'] = nvtblock.find("bid").text.split(", ")
             result['xref'] = nvtblock.find("xref").text.split(", ")
+            
+            # Retrieving CVEs from GVM output
+            result['cve'] = []
+            try:
+                refs = nvtblock.find("refs").findall("ref")
+                for ref in refs:
+                    if ref.get('type') == "cve":
+                        result['cve'].append(ref.get('id'))
+            except:
+                pass
 
             # the issue is we don't know quite what will be in here for
             # any given vulnerability. So we'll just put them all in the
